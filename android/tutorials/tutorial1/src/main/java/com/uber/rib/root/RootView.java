@@ -18,12 +18,24 @@ package com.uber.rib.root;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+
+import com.uber.rib.RootActivity;
+import com.uber.rib.core.RibActivity;
+import com.uber.rib.tutorial1.R;
 
 /** Top level view for {@link RootBuilder.RootScope}. */
 public class RootView extends FrameLayout implements RootInteractor.RootPresenter {
 
+  public void setActivity(RibActivity mActivity) {
+    if (mActivity != null)
+      this.mActivity = mActivity;
+  }
+
+  @Nullable RibActivity mActivity;
   public RootView(Context context) {
     this(context, null);
   }
@@ -34,5 +46,17 @@ public class RootView extends FrameLayout implements RootInteractor.RootPresente
 
   public RootView(Context context, @Nullable AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+  }
+
+
+  @Override
+  public void setSupportActionBar(Toolbar toolbar) {
+//    RootActivity.setSupportActionBar(toolbar);
+    if (mActivity != null) {
+//      mActivity.setSupportActionBar(toolbar);
+//      ActionBar ab = mActivity.getSupportActionBar();
+//      ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+//      ab.setDisplayHomeAsUpEnabled(true);
+    }
   }
 }

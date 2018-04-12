@@ -25,12 +25,12 @@ apply plugin: 'net.ltgt.errorprone'
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion deps.build.compileSdkVersion
-    buildToolsVersion deps.build.buildToolsVersion
+    compileSdkVersion 26
+    buildToolsVersion "27"
 
     defaultConfig {
-        minSdkVersion deps.build.minSdkVersion
-        targetSdkVersion deps.build.targetSdkVersion
+        minSdkVersion 26
+        targetSdkVersion 26
         applicationId "com.uber.tutorial1"
         versionCode 1
         versionName "1.0"
@@ -53,9 +53,27 @@ dependencies {
     provided deps.apt.javax
     testCompile project(":libraries:rib-test-utils")
     errorprone deps.build.errorProne
+
+    // RecyclerView
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+
+    // CardView
+    compile 'com.android.support:cardview-v7:26.1.0'
+
+
+    compile "com.android.support:appcompat-v7:26.1.0"
+    compile "com.android.support:design:26.1.0"
+    compile "com.android.support:support-v4:26.1.0"
+//    compile "com.android.support.test.espresso:espresso-idling-resource:+"
+//    compile "com.google.guava:guava:+"
+//    compile "android.arch.persistence.room:runtime:+"
+//    annotationProcessor "android.arch.persistence.room:compiler:+"
+//    compile "com.android.support.test.espresso:espresso-idling-resource:+"
+
 }
 
 tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-Xep:CheckReturnValue:OFF"]
     // NullAway configuration
     if (!name.toLowerCase().contains("test")) {
         options.compilerArgs += [

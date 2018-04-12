@@ -19,8 +19,11 @@ package com.uber.rib.root;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.uber.rib.RootActivity;
 import com.uber.rib.core.InteractorBaseComponent;
+import com.uber.rib.core.RibActivity;
 import com.uber.rib.core.ViewBuilder;
+import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.tutorial1.R;
 
 import java.lang.annotation.Retention;
@@ -36,8 +39,16 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 /** Builder for the {@link RootScope}. */
 public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.ParentComponent> {
 
-  public RootBuilder(ParentComponent dependency) {
+  public RibActivity getActivity() {
+    return mActivity;
+  }
+
+  RibActivity mActivity;
+
+  public RootBuilder(ParentComponent dependency, RibActivity activity) {
     super(dependency);
+    mActivity = activity;
+
   }
 
   /**
@@ -59,11 +70,14 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
 
   @Override
   protected RootView inflateView(LayoutInflater inflater, ViewGroup parentViewGroup) {
-    return (RootView) inflater.inflate(R.layout.root_rib, parentViewGroup, false);
+    RootView rootView = (RootView) inflater.inflate(R.layout.root_rib, parentViewGroup, false);
+    rootView.setActivity(mActivity);
+    return rootView;
   }
 
   public interface ParentComponent {
     // Define dependencies required from your parent interactor here.
+    RootInteractor.RootListener listener();
   }
 
   @dagger.Module
@@ -75,8 +89,17 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
 
     @RootScope
     @Provides
-    static RootRouter router(Component component, RootView view, RootInteractor interactor) {
-      return new RootRouter(view, interactor, component);
+    static RootRouter router(Component component,
+                             RootView view,
+                             RootInteractor interactor
+                             ) {
+      return new RootRouter(view,
+              interactor,
+              component,
+//              new ShowListBuilder(component)
+              new TaskActBuilder(component)
+      );
+
     }
   }
 
@@ -85,7 +108,11 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
     modules = Module.class,
     dependencies = ParentComponent.class
   )
-  interface Component extends InteractorBaseComponent<RootInteractor>, BuilderComponent {
+  interface Component extends InteractorBaseComponent<RootInteractor>,
+          BuilderComponent,
+//          ShowListBuilder.ParentComponent
+          TaskActBuilder.ParentComponent
+  {
 
     @dagger.Component.Builder
     interface Builder {
