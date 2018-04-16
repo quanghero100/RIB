@@ -20,7 +20,9 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.uber.rib.core.RibActivity;
@@ -69,6 +71,9 @@ public class RootActivity extends RibActivity{
       drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
 
     }
+
+
+
   }
   }
 
