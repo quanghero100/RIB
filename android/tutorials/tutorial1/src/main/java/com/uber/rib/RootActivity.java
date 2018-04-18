@@ -17,12 +17,18 @@
 package com.uber.rib;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.uber.rib.core.RibActivity;
@@ -31,10 +37,17 @@ import com.uber.rib.root.RootBuilder;
 import com.uber.rib.root.RootInteractor;
 import com.uber.rib.tutorial1.R;
 
+import javax.annotation.Resource;
+
 /**
  * The sample app's single activity.
  */
 public class RootActivity extends RibActivity{
+
+    @Nullable
+    Toolbar mToolbar;
+    @Nullable
+    DrawerLayout mDrawerLayout;
 
   @SuppressWarnings("unchecked")
   @Override
@@ -46,11 +59,37 @@ public class RootActivity extends RibActivity{
       }
     }, this);
 
+
+
     return rootBuilder.build(parentViewGroup);
   }
 
-  RibActivity mActivity = this;
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+      mDrawerLayout = findViewById(R.id.drawer_layout);
+      switch (item.getItemId()){
+          case android.R.id.home: {
+            if (mDrawerLayout != null) {
+                if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+                  mDrawerLayout.closeDrawer(Gravity.START);
+                } else {
+                  mDrawerLayout.openDrawer(Gravity.START);
+                }
+            }
+            return true;
+          }
+      }
+        return super.onOptionsItemSelected(item);
+    }
+
+    RibActivity mActivity = this;
+
+
+
   class InstanceRootListener implements RootInteractor.RootListener {
+
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -60,19 +99,36 @@ public class RootActivity extends RibActivity{
       ActionBar ab = getSupportActionBar();
       ab.setHomeAsUpIndicator(R.drawable.ic_menu);
       ab.setDisplayHomeAsUpEnabled(true);
-      ab.setDisplayShowHomeEnabled(true);
+//      ab.setDisplayShowHomeEnabled(true);
 //      ab.setTitle("hsdfghdf");
 //      ab.setSubtitle("sdfsd");
       ab.setBackgroundDrawable(new ColorDrawable(R.drawable.colorPrimaryDrawable));
+      mToolbar = toolbar;
+
     }
+
+
+
 
     @Override
     public void suggestSetupNavigationDrawer(DrawerLayout drawerLayout) {
       drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
+      mDrawerLayout = drawerLayout;
 
     }
 
 
+
+//    @Override
+//    public void suggestHomeMenuClick() {
+//      if (mDrawerLayout != null) {
+//        if (mDrawerLayout.isDrawerOpen(Gravity.END)) {
+//          mDrawerLayout.closeDrawer(Gravity.START);
+//        } else {
+//          mDrawerLayout.openDrawer(Gravity.END);
+//        }
+//      }
+//    }
 
   }
   }

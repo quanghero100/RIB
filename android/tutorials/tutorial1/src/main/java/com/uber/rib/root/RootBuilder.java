@@ -19,11 +19,13 @@ package com.uber.rib.root;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.uber.rib.RootActivity;
 import com.uber.rib.core.InteractorBaseComponent;
 import com.uber.rib.core.RibActivity;
 import com.uber.rib.core.ViewBuilder;
+import com.uber.rib.root.common.navigation_drawer.NavigationDrawerBuilder;
+import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
 import com.uber.rib.root.task_act.TaskActBuilder;
+import com.uber.rib.root.task_act.TaskActInteractor;
 import com.uber.rib.tutorial1.R;
 
 import java.lang.annotation.Retention;
@@ -101,6 +103,14 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
       );
 
     }
+
+    @RootScope
+    @Provides
+    static TaskActInteractor.Listener taskActListener(RootInteractor interactor) {
+      return interactor. new TaskActListener();
+    }
+
+
   }
 
   @RootScope
@@ -127,6 +137,8 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
       Component build();
     }
   }
+
+
 
   interface BuilderComponent {
     RootRouter rootRouter();

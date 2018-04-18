@@ -16,16 +16,26 @@
 
 package com.uber.rib.root;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.uber.rib.core.Bundle;
 import com.uber.rib.core.Interactor;
 import com.uber.rib.core.RibInteractor;
+import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
+import com.uber.rib.root.task_act.TaskActInteractor;
 import com.uber.rib.root.task_act.TaskActRouter;
+import com.uber.rib.tutorial1.R;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 /** Coordinates Business Logic for {@link RootBuilder.RootScope}. */
 @RibInteractor
@@ -48,16 +58,43 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
       listener.suggestSetupSupportActionBar(toolbar);
       listener.suggestSetupNavigationDrawer(drawerLayout);
     }
+
+//    presenter.homeMenuClick()
+//            .subscribe(new Consumer<View>() {
+//              @Override
+//              public void accept(View view) throws Exception {
+//                if (listener != null) {
+//                  listener.suggestHomeMenuClick();
+//                }
+//              }
+//            });
     // Add attachment logic here (RxSubscriptions, etc.).
+  }
+
+  class TaskActListener implements TaskActInteractor.Listener {
+
+    @Override
+    public void requestMenuItemListClick(Integer menuItemId) {
+      Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item list", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void requestMenuItemStatisticClick(Integer menuItemId) {
+      Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item statistic", Toast.LENGTH_SHORT).show();
+
+    }
   }
 
   /** Presenter interface implemented by this RIB's view. */
   public interface RootPresenter {
-    void setSupportActionBar(Toolbar toolbar);
+//    void setSupportActionBar(Toolbar toolbar);
+//    Observable<View> homeMenuClick();
   }
 
   public interface RootListener {
     void suggestSetupSupportActionBar(Toolbar toolbar);
     void suggestSetupNavigationDrawer(DrawerLayout drawerLayout);
+//    void suggestHomeMenuClick();
   }
 }
