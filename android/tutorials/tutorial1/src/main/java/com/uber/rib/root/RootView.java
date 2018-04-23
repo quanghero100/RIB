@@ -71,43 +71,4 @@ public class RootView extends FrameLayout implements
   }
 
 
-//  @Override
-//  public Observable<View> homeMenuClick() {
-//    if (this.mActivity != null) {
-////      final View view = this.mActivity.findViewById(android.R.id.home);
-//        final EditText view = new EditText(getContext());
-//
-//        return RxView.clicks(view)
-//              .map(new Function<Object, View>() {
-//                @Override
-//                public View apply(Object o) throws Exception {
-//                  return view;
-//                }
-//              });
-//    }
-//
-//    final EditText editText = new EditText(getContext());
-//    return RxView.clicks(editText)
-//            .map(new Function<Object, View>() {
-//              @Override
-//              public View apply(Object o) throws Exception {
-//                return editText;
-//              }
-//            });
-//  }
-
-
-//  @Override
-//  public void setSupportActionBar(Toolbar toolbar) {
-////    RootActivity.setSupportActionBar(toolbar);
-//    if (mActivity != null) {
-////      mActivity.setSupportActionBar(toolbar);
-////      ActionBar ab = mActivity.getSupportActionBar();
-////      ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-////      ab.setDisplayHomeAsUpEnabled(true);
-//    }
-//  }
-
-
-
 }

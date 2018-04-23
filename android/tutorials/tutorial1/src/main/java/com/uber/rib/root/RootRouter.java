@@ -23,6 +23,7 @@ import com.uber.rib.root.show_list.ShowListBuilder;
 import com.uber.rib.root.show_list.ShowListRouter;
 import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.root.task_act.TaskActRouter;
+import com.uber.rib.root.task_act.TaskStatus;
 import com.uber.rib.tutorial1.R;
 
 //import javax.annotation.Nullable;
@@ -49,6 +50,7 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
     this.taskActBuilder = taskActBuilder;
 
   }
+
 
 
 //  public void attachShowList() {
@@ -104,11 +106,31 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
 
         break;
       }
+    }
+  }
+
+  public void requestChildRibListenPopupMenuItemSelected(Integer menuItemId) {
+    switch (menuItemId) {
+
+      case R.id.all: {
+        Toast.makeText(getView().getContext(), "child rib recevied reaquest filter all from parent", Toast.LENGTH_SHORT).show();
+
+        break;
+      }
+      case R.id.active: {
+        Toast.makeText(getView().getContext(), "child rib recevied reaquest filter active from parent", Toast.LENGTH_SHORT).show();
+
+        break;
+      }
+      case R.id.completed: {
+        Toast.makeText(getView().getContext(), "child rib recevied reaquest filter completed from parent", Toast.LENGTH_SHORT).show();
+
+        break;
+      }
 
 
     }
   }
-
 
 
 }

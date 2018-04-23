@@ -70,7 +70,9 @@ public class RootActivity extends RibActivity {
     RootRouter mRootRouter = null;
 
     @Nullable
-    public static Menu mMenu;
+    public Menu mMenu;
+
+
     public InstanceRootListener instanceRootListener = new InstanceRootListener();
 
     @Nullable public PopupMenu mPopupMenu;
@@ -102,9 +104,30 @@ public class RootActivity extends RibActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mRootRouter != null) {
-            mRootRouter.requestChildRibListenMenuItemSelected(item.getItemId());
-        }
+      switch (item.getItemId()) {
+          case R.id.menu_filter: {
+              View view = findViewById(R.id.menu_filter);
+              PopupMenu popupMenu = new PopupMenu(this, this.findViewById(R.id.menu_filter));
+              popupMenu.getMenuInflater().inflate(R.menu.filter_tasks, popupMenu.getMenu());
+              popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                  @Override
+                  public boolean onMenuItemClick(MenuItem item) {
+                      if (mRootRouter != null) {
+                          mRootRouter.requestChildRibListenPopupMenuItemSelected(item.getItemId());
+                      }
+                      return false;
+                  }
+              });
+              popupMenu.show();
+              break;
+          }
+          default: {
+              if (mRootRouter != null) {
+                  mRootRouter.requestChildRibListenMenuItemSelected(item.getItemId());
+              }
+          }
+      }
+
         return super.onOptionsItemSelected(item);
     }
 

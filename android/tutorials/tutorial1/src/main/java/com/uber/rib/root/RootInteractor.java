@@ -81,12 +81,15 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
     @Override
     public void requestMenuItemListClick(Integer menuItemId) {
+      getRouter().attachTaskAct();
       Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item list", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void requestMenuItemStatisticClick(Integer menuItemId) {
+      getRouter().detachTaskAct();
+
       Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item statistic", Toast.LENGTH_SHORT).show();
 
     }
@@ -102,14 +105,12 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
   /** Presenter interface implemented by this RIB's view. */
   public interface RootPresenter {
-//    void setSupportActionBar(Toolbar toolbar);
-//    Observable<View> homeMenuClick();
+
   }
 
   public interface RootListener {
     void suggestSetupSupportActionBar(Toolbar toolbar);
     void suggestSetupNavigationDrawer(DrawerLayout drawerLayout);
-//    void suggestHomeMenuClick();
     void suggestAddMenuTaskFragment(Integer resourceMenuId);
   }
 }
