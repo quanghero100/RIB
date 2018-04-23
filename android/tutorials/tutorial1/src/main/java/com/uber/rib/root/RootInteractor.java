@@ -20,10 +20,12 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.uber.rib.RootActivity;
 import com.uber.rib.core.Bundle;
 import com.uber.rib.core.Interactor;
 import com.uber.rib.core.RibInteractor;
@@ -44,6 +46,8 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
   @Inject RootPresenter presenter;
   @Inject RootListener listener;
 
+  @Nullable
+  Menu mMenu;
 
   @Override
   protected void didBecomeActive(@Nullable Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
     if (listener != null) {
       listener.suggestSetupSupportActionBar(toolbar);
       listener.suggestSetupNavigationDrawer(drawerLayout);
+
     }
 
 //    presenter.homeMenuClick()
@@ -71,6 +76,7 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
     // Add attachment logic here (RxSubscriptions, etc.).
   }
 
+
   class TaskActListener implements TaskActInteractor.Listener {
 
     @Override
@@ -84,6 +90,14 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
       Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item statistic", Toast.LENGTH_SHORT).show();
 
     }
+
+    @Override
+    public void requestAddMenuTaskFragment(Integer resourceMenuId) {
+      listener.suggestAddMenuTaskFragment(resourceMenuId);
+
+    }
+
+
   }
 
   /** Presenter interface implemented by this RIB's view. */
@@ -96,5 +110,6 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
     void suggestSetupSupportActionBar(Toolbar toolbar);
     void suggestSetupNavigationDrawer(DrawerLayout drawerLayout);
 //    void suggestHomeMenuClick();
+    void suggestAddMenuTaskFragment(Integer resourceMenuId);
   }
 }

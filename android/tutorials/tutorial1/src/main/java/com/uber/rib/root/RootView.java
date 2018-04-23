@@ -31,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxPopupMenu;
 import com.uber.rib.RootActivity;
 import com.uber.rib.core.Initializer;
 import com.uber.rib.core.RibActivity;
@@ -46,12 +47,17 @@ public class RootView extends FrameLayout implements
 
 {
 
-  public void setActivity(RibActivity mActivity) {
+  public void setActivity(RootActivity mActivity) {
     if (mActivity != null)
       this.mActivity = mActivity;
+
   }
 
-  @Nullable RibActivity mActivity;
+  public RootActivity getActivity() {
+    return mActivity;
+  }
+
+  public RootActivity mActivity = new RootActivity();
   public RootView(Context context) {
     this(context, null);
   }

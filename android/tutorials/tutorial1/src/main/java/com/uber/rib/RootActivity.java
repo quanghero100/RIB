@@ -18,95 +18,109 @@ package com.uber.rib;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxMenuItem;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.uber.rib.core.RibActivity;
 import com.uber.rib.core.ViewRouter;
 import com.uber.rib.root.RootBuilder;
 import com.uber.rib.root.RootInteractor;
+import com.uber.rib.root.RootRouter;
+import com.uber.rib.root.task_act.TaskActInteractor;
 import com.uber.rib.tutorial1.R;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.functions.Function;
 
 /**
  * The sample app's single activity.
  */
-public class RootActivity extends RibActivity{
+public class RootActivity extends RibActivity {
 
     @Nullable
     Toolbar mToolbar;
     @Nullable
     DrawerLayout mDrawerLayout;
 
+    Integer resourceOptionsMenuId = -1;
+
+    @Nullable
+    RootRouter mRootRouter = null;
+
+    @Nullable
+    public static Menu mMenu;
+    public InstanceRootListener instanceRootListener = new InstanceRootListener();
+
+    @Nullable public PopupMenu mPopupMenu;
+
   @SuppressWarnings("unchecked")
   @Override
   protected ViewRouter<?, ?, ?> createRouter(ViewGroup parentViewGroup) {
+
     RootBuilder rootBuilder = new RootBuilder(new RootBuilder.ParentComponent() {
       @Override
       public RootInteractor.RootListener listener() {
-        return new InstanceRootListener();
+        return instanceRootListener;
       }
     }, this);
 
 
 
-    return rootBuilder.build(parentViewGroup);
+    RootRouter rootRouter = rootBuilder.build(parentViewGroup);
+    mRootRouter = rootRouter;
+    return rootRouter;
   }
 
-
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(resourceOptionsMenuId, menu);
+    mMenu = menu;
+    return super.onCreateOptionsMenu(menu);
+  }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-      mDrawerLayout = findViewById(R.id.drawer_layout);
-      switch (item.getItemId()){
-          case android.R.id.home: {
-            if (mDrawerLayout != null) {
-                if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
-                  mDrawerLayout.closeDrawer(Gravity.START);
-                } else {
-                  mDrawerLayout.openDrawer(Gravity.START);
-                }
-            }
-            return true;
-          }
-      }
+        if (mRootRouter != null) {
+            mRootRouter.requestChildRibListenMenuItemSelected(item.getItemId());
+        }
         return super.onOptionsItemSelected(item);
     }
-
-    RibActivity mActivity = this;
 
 
 
   class InstanceRootListener implements RootInteractor.RootListener {
 
-
     @SuppressLint("ResourceAsColor")
     @Override
     public void suggestSetupSupportActionBar(Toolbar toolbar) {
-//      mActivity.setSupportActionBar(toolbar);
-
       ActionBar ab = getSupportActionBar();
       ab.setHomeAsUpIndicator(R.drawable.ic_menu);
       ab.setDisplayHomeAsUpEnabled(true);
-//      ab.setDisplayShowHomeEnabled(true);
-//      ab.setTitle("hsdfghdf");
-//      ab.setSubtitle("sdfsd");
       ab.setBackgroundDrawable(new ColorDrawable(R.drawable.colorPrimaryDrawable));
       mToolbar = toolbar;
-
     }
-
 
 
 
@@ -117,19 +131,15 @@ public class RootActivity extends RibActivity{
 
     }
 
+    @Override
+    public void suggestAddMenuTaskFragment(Integer resourceMenuId) {
+
+      resourceOptionsMenuId = resourceMenuId;
 
 
-//    @Override
-//    public void suggestHomeMenuClick() {
-//      if (mDrawerLayout != null) {
-//        if (mDrawerLayout.isDrawerOpen(Gravity.END)) {
-//          mDrawerLayout.closeDrawer(Gravity.START);
-//        } else {
-//          mDrawerLayout.openDrawer(Gravity.END);
-//        }
-//      }
-//    }
+    }
 
   }
-  }
+
+}
 

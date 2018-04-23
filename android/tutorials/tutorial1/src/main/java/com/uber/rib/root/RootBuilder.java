@@ -16,9 +16,11 @@
 
 package com.uber.rib.root;
 
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.uber.rib.RootActivity;
 import com.uber.rib.core.InteractorBaseComponent;
 import com.uber.rib.core.RibActivity;
 import com.uber.rib.core.ViewBuilder;
@@ -41,13 +43,13 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 /** Builder for the {@link RootScope}. */
 public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.ParentComponent> {
 
-  public RibActivity getActivity() {
-    return mActivity;
-  }
+//  public RibActivity getActivity() {
+//    return mActivity;
+//  }
 
-  RibActivity mActivity;
+  public RootActivity mActivity;
 
-  public RootBuilder(ParentComponent dependency, RibActivity activity) {
+  public RootBuilder(ParentComponent dependency, RootActivity activity) {
     super(dependency);
     mActivity = activity;
 
@@ -99,7 +101,7 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
               interactor,
               component,
 //              new ShowListBuilder(component)
-              new TaskActBuilder(component)
+              new TaskActBuilder(component, view.getActivity())
       );
 
     }

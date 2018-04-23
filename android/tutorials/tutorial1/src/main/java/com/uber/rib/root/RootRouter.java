@@ -23,9 +23,11 @@ import com.uber.rib.root.show_list.ShowListBuilder;
 import com.uber.rib.root.show_list.ShowListRouter;
 import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.root.task_act.TaskActRouter;
+import com.uber.rib.tutorial1.R;
 
 //import javax.annotation.Nullable;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 /** Adds and removes children of {@link RootBuilder.RootScope}. */
 public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder.Component> {
@@ -75,6 +77,35 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
       detachChild(this.taskActRouter);
       getView().removeView(this.taskActRouter.getView());
       this.taskActRouter = null;
+    }
+  }
+
+  public void requestChildRibListenMenuItemSelected(Integer menuItemId) {
+    switch (menuItemId) {
+      case android.R.id.home: {
+        if (taskActRouter != null) {
+          taskActRouter.getInteractor().presenter.toggleOpenCloseDrawer();
+        }
+        break;
+      }
+      case R.id.menu_clear: {
+        if (taskActRouter != null) {
+          Toast.makeText(getView().getContext(), "child rib recevied reaquest clear from parent", Toast.LENGTH_SHORT).show();
+        }
+        break;
+      }
+      case R.id.menu_filter: {
+        Toast.makeText(getView().getContext(), "child rib recevied reaquest open filter from parent", Toast.LENGTH_SHORT).show();
+
+        break;
+      }
+      case R.id.menu_refresh: {
+        Toast.makeText(getView().getContext(), "child rib recevied reaquest refresh from parent", Toast.LENGTH_SHORT).show();
+
+        break;
+      }
+
+
     }
   }
 
