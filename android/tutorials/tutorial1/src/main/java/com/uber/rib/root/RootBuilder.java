@@ -26,8 +26,10 @@ import com.uber.rib.core.RibActivity;
 import com.uber.rib.core.ViewBuilder;
 import com.uber.rib.root.common.navigation_drawer.NavigationDrawerBuilder;
 import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
+import com.uber.rib.root.show_list.ShowListBuilder;
 import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.root.task_act.TaskActInteractor;
+import com.uber.rib.root.task_add_edit.TaskAddEditBuilder;
 import com.uber.rib.tutorial1.R;
 
 import java.lang.annotation.Retention;
@@ -101,7 +103,9 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
               interactor,
               component,
 //              new ShowListBuilder(component)
-              new TaskActBuilder(component, view.getActivity())
+              new TaskActBuilder(component, view.getActivity()),
+              new ShowListBuilder(component),
+              new TaskAddEditBuilder(component)
       );
 
     }
@@ -122,8 +126,10 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
   )
   interface Component extends InteractorBaseComponent<RootInteractor>,
           BuilderComponent,
-//          ShowListBuilder.ParentComponent
-          TaskActBuilder.ParentComponent
+          TaskActBuilder.ParentComponent,
+          ShowListBuilder.ParentComponent,
+          TaskAddEditBuilder.ParentComponent
+
   {
 
     @dagger.Component.Builder

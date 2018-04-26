@@ -29,6 +29,7 @@ import com.uber.rib.RootActivity;
 import com.uber.rib.core.Bundle;
 import com.uber.rib.core.Interactor;
 import com.uber.rib.core.RibInteractor;
+import com.uber.rib.data.Task;
 import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
 import com.uber.rib.root.task_act.TaskActInteractor;
 import com.uber.rib.root.task_act.TaskActRouter;
@@ -81,6 +82,8 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
     @Override
     public void requestMenuItemListClick(Integer menuItemId) {
+      getRouter().detachShowList();
+//      getRouter().detachTaskAct();
       getRouter().attachTaskAct();
       Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item list", Toast.LENGTH_SHORT).show();
 
@@ -88,8 +91,9 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
     @Override
     public void requestMenuItemStatisticClick(Integer menuItemId) {
-      getRouter().detachTaskAct();
-
+//      getRouter().detachTaskAct();
+//      getRouter().detachShowList();
+//      getRouter().attachShowList();
       Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item statistic", Toast.LENGTH_SHORT).show();
 
     }
@@ -98,6 +102,11 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
     public void requestAddMenuTaskFragment(Integer resourceMenuId) {
       listener.suggestAddMenuTaskFragment(resourceMenuId);
 
+    }
+
+    @Override
+    public void requestAttachAddTaskView() {
+      getRouter().attachTaskAddEdit();
     }
 
 

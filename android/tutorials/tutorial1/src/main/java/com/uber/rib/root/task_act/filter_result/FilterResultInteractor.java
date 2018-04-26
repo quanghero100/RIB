@@ -1,0 +1,80 @@
+package com.uber.rib.root.task_act.filter_result;
+
+import android.support.annotation.Nullable;
+
+import com.uber.rib.core.Bundle;
+import com.uber.rib.core.Interactor;
+import com.uber.rib.core.RibInteractor;
+import com.uber.rib.core.Presenter;
+import com.uber.rib.core.Router;
+import com.uber.rib.data.Task;
+import com.uber.rib.root.task_act.TaskStatus;
+import com.uber.rib.tutorial1.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
+/**
+ * Coordinates Business Logic for {@link FilterResultBuilder.FilterResultScope}.
+ *
+ * TODO describe the logic of this scope.
+ */
+@RibInteractor
+public class FilterResultInteractor
+    extends Interactor<FilterResultInteractor.FilterResultPresenter, FilterResultRouter> {
+
+  @Inject FilterResultPresenter presenter;
+  public Integer mCurrentStatusFilterResult = TaskStatus.ALL;
+
+
+  @Override
+  protected void didBecomeActive(@Nullable Bundle savedInstanceState) {
+    super.didBecomeActive(savedInstanceState);
+
+    // TODO: Add attachment logic here (RxSubscriptions, etc.).
+//    presenter.loadData(loadData());
+//    presenter.setFilterResultMatchingWithStatus(mCurrentStatusFilterResult);
+
+
+  }
+
+  @Override
+  protected void willResignActive() {
+    super.willResignActive();
+
+    // TODO: Perform any required clean up here, or delete this method entirely if not needed.
+  }
+
+  public void showFilterResult(List<Task> tasks) {
+//    switch (menuItemId) {
+//      case R.id.all: {
+//        mCurrentStatusFilterResult = TaskStatus.ALL;
+//        break;
+//      }
+//      case R.id.active: {
+//        mCurrentStatusFilterResult = TaskStatus.ACTIVE;
+//        break;
+//      }
+//      case R.id.completed: {
+//        mCurrentStatusFilterResult = TaskStatus.COMPLETED;
+//        break;
+//      }
+//    }
+    presenter.updateFilterResult(tasks);
+  }
+
+
+  /**
+   * Presenter interface implemented by this RIB's view.
+   */
+  interface FilterResultPresenter {
+    void updateFilterResult(List<Task> tasks);
+    void loadData(List<Task> listTask);
+
+  }
+
+
+}
