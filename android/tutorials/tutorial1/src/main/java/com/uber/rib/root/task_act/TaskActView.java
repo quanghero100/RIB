@@ -21,6 +21,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.uber.rib.RootActivity;
 import com.uber.rib.core.Initializer;
 import com.uber.rib.core.RibActivity;
+import com.uber.rib.data.Task;
 import com.uber.rib.tutorial1.R;
 
 import io.reactivex.Observable;
@@ -105,6 +106,8 @@ public class TaskActView extends DrawerLayout implements TaskActInteractor.TaskA
               }
             });
   }
+
+
 
 
 }

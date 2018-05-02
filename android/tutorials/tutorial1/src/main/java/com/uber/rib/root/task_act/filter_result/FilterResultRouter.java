@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.uber.rib.core.ViewRouter;
+import com.uber.rib.data.Task;
+
+import java.util.List;
 
 /**
  * Adds and removes children of {@link FilterResultBuilder.FilterResultScope}.
@@ -18,5 +21,9 @@ public class FilterResultRouter extends
       FilterResultInteractor interactor,
       FilterResultBuilder.Component component) {
     super(view, interactor, component);
+  }
+
+  public List<Task> requestAddNewTask(Task task) {
+    return getInteractor().presenter.addNewTask(task);
   }
 }

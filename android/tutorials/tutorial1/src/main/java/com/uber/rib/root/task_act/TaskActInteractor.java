@@ -117,6 +117,17 @@ public class TaskActInteractor
 
   }
 
+  public void updateStatusData(List<Task> listTask) {
+    mStatusData = listTask.size() > 0 ? TaskStatus.HAVE_DATA : TaskStatus.NO_DATA;
+//    if (mStatusData.equals(TaskStatus.NO_DATA)) {
+//      getRouter().detachFilterResult();
+//      getRouter().attachFilterEmpty();
+//    } else if (mStatusData.equals(TaskStatus.HAVE_DATA)) {
+//      getRouter().detachFilterEmpty();
+//      getRouter().attachFilterResult();
+//    }
+  }
+
   @Override
   protected void willResignActive() {
     super.willResignActive();
@@ -163,6 +174,7 @@ public class TaskActInteractor
     void toggleOpenCloseDrawer();
     void closeDrawer();
     Observable<Boolean> addTaskButtonClick();
+//    void updateStatusData();
   }
 
   public interface Listener {

@@ -73,37 +73,22 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
 
   @Override
   public void updateFilterResult(List<Task> tasks) {
-//    if (status.equals(TaskStatus.ALL)) {
-//      mTaskAdapter.updateData(mListTask);
-//    } else if (status.equals(TaskStatus.ACTIVE)) {
-//      List<Task> activeTasks = new ArrayList<Task>();
-//      for (int i = 0; i < mListTask.size(); i++) {
-//        if (mListTask.get(i).isActive()) {
-//          activeTasks.add(mListTask.get(i));
-//        }
-//      }
-//
-//      mTaskAdapter.updateData(activeTasks);
-//
-//
-//    } else if (status.equals(TaskStatus.COMPLETED)) {
-//      List<Task> activeTasks = new ArrayList<Task>();
-//      for (int i = 0; i < mListTask.size(); i++) {
-//        if (mListTask.get(i).isCompleted()) {
-//          activeTasks.add(mListTask.get(i));
-//        }
-//      }
-//
-//      mTaskAdapter.updateData(activeTasks);
-//    }
       mTaskAdapter.updateData(tasks);
 
   }
 
+
   @Override
-  public void loadData(List<Task> listTask) {
-//    this.mTaskAdapter.updateData(listTask);
-    mListTask = listTask;
+  public List<Task> addNewTask(Task task) {
+    mTaskAdapter.addNewTask(task);
+    return mTaskAdapter.getListTask();
+//    mListTask.add(task);
+//    mTaskAdapter.updateData(mListTask);
+  }
+
+  @Override
+  public void updateStatusData() {
+
   }
 
 
@@ -182,6 +167,15 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
       });
 
       return rowView;
+    }
+
+    public void addNewTask(Task task) {
+      mTasks.add(task);
+      notifyDataSetChanged();
+    }
+
+    public List<Task> getListTask() {
+      return mTasks;
     }
   }
 

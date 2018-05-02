@@ -17,67 +17,69 @@
 package com.uber.rib.root;
 
 import com.uber.rib.core.ViewRouter;
-import com.uber.rib.root.common.navigation_drawer.NavigationDrawerBuilder;
-import com.uber.rib.root.common.navigation_drawer.NavigationDrawerRouter;
-import com.uber.rib.root.show_list.ShowListBuilder;
-import com.uber.rib.root.show_list.ShowListRouter;
+import com.uber.rib.data.Task;
 import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.root.task_act.TaskActRouter;
-import com.uber.rib.root.task_act.TaskStatus;
-import com.uber.rib.root.task_add_edit.TaskAddEditBuilder;
-import com.uber.rib.root.task_add_edit.TaskAddEditRouter;
+import com.uber.rib.root.task_add.TaskAddBuilder;
+import com.uber.rib.root.task_add.TaskAddRouter;
 import com.uber.rib.tutorial1.R;
 
 //import javax.annotation.Nullable;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /** Adds and removes children of {@link RootBuilder.RootScope}. */
 public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder.Component> {
 
-  private ShowListBuilder showListBuilder;
-  @Nullable private ShowListRouter showListRouter;
+//  private ShowListBuilder showListBuilder;
+//  @Nullable private ShowListRouter showListRouter;
   private TaskActBuilder taskActBuilder;
-  @Nullable private TaskActRouter taskActRouter;
-  private TaskAddEditBuilder taskAddEditBuilder;
-  @Nullable private TaskAddEditRouter taskAddEditRouter;
+  @Nullable public TaskActRouter taskActRouter;
+  private TaskAddBuilder taskAddBuilder;
+  @Nullable private TaskAddRouter taskAddRouter;
+
+  public ArrayList<ViewRouter> listRouter = new ArrayList<>();
 
   RootRouter(RootView view,
              RootInteractor interactor,
              RootBuilder.Component component,
              TaskActBuilder taskActBuilder,
-             ShowListBuilder showListBuilder,
-             TaskAddEditBuilder taskAddEditBuilder
+//             ShowListBuilder showListBuilder,
+             TaskAddBuilder taskAddBuilder
              ) {
     super(view, interactor, component);
-    this.showListBuilder = showListBuilder;
+//    this.showListBuilder = showListBuilder;
     this.taskActBuilder = taskActBuilder;
-    this.taskAddEditBuilder = taskAddEditBuilder;
+    this.taskAddBuilder = taskAddBuilder;
 
   }
 
 
-  public void attachShowList() {
-    this.showListRouter = this.showListBuilder.build(getView());
-    attachChild(this.showListRouter);
-    getView().addView(this.showListRouter.getView());
+//  public void attachShowList() {
+//    this.showListRouter = this.showListBuilder.build(getView());
+//    attachChild(this.showListRouter);
+//    getView().addView(this.showListRouter.getView());
+//
+//  }
 
-  }
-
-  public void detachShowList() {
-    if (this.showListRouter != null) {
-      detachChild(this.showListRouter);
-      getView().removeView(this.showListRouter.getView());
-      this.showListRouter = null;
-    }
-  }
+//  public void detachShowList() {
+//    if (this.showListRouter != null) {
+//      detachChild(this.showListRouter);
+//      getView().removeView(this.showListRouter.getView());
+//      this.showListRouter = null;
+//    }
+//  }
 
   public TaskActRouter attachTaskAct() {
     if (this.taskActRouter == null) {
       this.taskActRouter = this.taskActBuilder.build(getView());
+      listRouter.add(taskActRouter);
       attachChild(this.taskActRouter);
       getView().addView(this.taskActRouter.getView());
     }
+
     return taskActRouter;
 
   }
@@ -87,32 +89,46 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
       detachChild(this.taskActRouter);
       getView().removeView(this.taskActRouter.getView());
       this.taskActRouter = null;
+      listRouter.remove(listRouter.size() - 1);
     }
   }
 
-  public void attachTaskAddEdit() {
-    if (this.taskAddEditRouter == null) {
-      this.taskAddEditRouter = this.taskAddEditBuilder.build(getView());
-      attachChild(this.taskAddEditRouter);
-      getView().addView(this.taskAddEditRouter.getView());
+  public void attachTaskAdd() {
+    if (this.taskAddRouter == null) {
+      this.taskAddRouter = this.taskAddBuilder.build(getView());
+      listRouter.add(taskAddRouter);
+      attachChild(this.taskAddRouter);
+      getView().addView(this.taskAddRouter.getView());
+
     }
-//    return taskAddEditRouter;
+//    return taskAddRouter;
 
   }
 
-  public void detachTaskAddEdit() {
-    if (this.taskAddEditRouter != null) {
-      detachChild(this.taskAddEditRouter);
-      getView().removeView(this.taskAddEditRouter.getView());
-      this.taskAddEditRouter = null;
+  public void detachTaskAdd() {
+    if (this.taskAddRouter != null) {
+      detachChild(this.taskAddRouter);
+      getView().removeView(this.taskAddRouter.getView());
+      this.taskAddRouter = null;
+      listRouter.remove(listRouter.size() - 1);
+
     }
   }
 
   public void requestChildRibListenMenuItemSelected(Integer menuItemId) {
     switch (menuItemId) {
       case android.R.id.home: {
-        if (taskActRouter != null) {
+
+        if (taskActRouter != null && listRouter.size() == 1) {
           taskActRouter.getInteractor().presenter.toggleOpenCloseDrawer();
+
+        }
+
+        if (taskAddRouter != null && listRouter.size() > 1) {
+          detachTaskAdd();
+          getInteractor().listener.suggestSetupActionBar(R.string.app_name, true);
+
+
         }
         break;
       }
@@ -139,6 +155,23 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
   public void requestChildRibListenPopupMenuItemSelected(Integer menuItemId) {
     if (taskActRouter != null)
       taskActRouter.getInteractor().getRouter().listenerMenuItemPopupClick(menuItemId);
+  }
+
+  public boolean requestChildRibListenBackPress() {
+    if (listRouter.size() > 1) {
+      detachTaskAdd();
+      getInteractor().listener.suggestSetupActionBar(R.string.app_name, true);
+      return false;
+    }
+    return true;
+
+  }
+
+  public void requestAddNewTask(Task task) {
+    if (taskActRouter != null) {
+      taskActRouter.requestAddNewTask(task);
+
+    }
   }
 
 

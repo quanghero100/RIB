@@ -41,7 +41,7 @@ public class TaskActRouter extends
   @Nullable
   private FilterResultRouter filterResultRouter;
 
-
+//  private Integer statusFilter = TaskStatus.ALL;
 
   public TaskActRouter(
       TaskActView view,
@@ -57,6 +57,16 @@ public class TaskActRouter extends
     this.filterResultBuilder = filterResultBuilder;
 
 
+  }
+
+  public void requestAddNewTask(Task task) {
+    if (filterResultRouter != null) {
+      List<Task> listTask = filterResultRouter.requestAddNewTask(task);
+      getInteractor().updateStatusData(listTask);
+//      getInteractor().presenter.updateStatusData();
+//      listenerMenuItemPopupClick(getInteractor().getStatusFiler());
+
+    }
   }
 
   public void listenerMenuItemPopupClick(Integer menuItemId) {

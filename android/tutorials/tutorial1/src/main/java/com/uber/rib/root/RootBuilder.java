@@ -16,20 +16,17 @@
 
 package com.uber.rib.root;
 
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.uber.rib.RootActivity;
 import com.uber.rib.core.InteractorBaseComponent;
-import com.uber.rib.core.RibActivity;
 import com.uber.rib.core.ViewBuilder;
-import com.uber.rib.root.common.navigation_drawer.NavigationDrawerBuilder;
-import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
 import com.uber.rib.root.show_list.ShowListBuilder;
 import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.root.task_act.TaskActInteractor;
-import com.uber.rib.root.task_add_edit.TaskAddEditBuilder;
+import com.uber.rib.root.task_add.TaskAddBuilder;
+import com.uber.rib.root.task_add.TaskAddInteractor;
 import com.uber.rib.tutorial1.R;
 
 import java.lang.annotation.Retention;
@@ -104,8 +101,8 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
               component,
 //              new ShowListBuilder(component)
               new TaskActBuilder(component, view.getActivity()),
-              new ShowListBuilder(component),
-              new TaskAddEditBuilder(component)
+//              new ShowListBuilder(component),
+              new TaskAddBuilder(component)
       );
 
     }
@@ -116,6 +113,11 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
       return interactor. new TaskActListener();
     }
 
+    @RootScope
+    @Provides
+    static TaskAddInteractor.Listener taskAddListener(RootInteractor interactor) {
+      return interactor. new TaskAddListener();
+    }
 
   }
 
@@ -128,7 +130,7 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
           BuilderComponent,
           TaskActBuilder.ParentComponent,
           ShowListBuilder.ParentComponent,
-          TaskAddEditBuilder.ParentComponent
+          TaskAddBuilder.ParentComponent
 
   {
 

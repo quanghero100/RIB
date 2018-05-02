@@ -16,29 +16,21 @@
 
 package com.uber.rib.root;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import com.uber.rib.RootActivity;
 import com.uber.rib.core.Bundle;
 import com.uber.rib.core.Interactor;
 import com.uber.rib.core.RibInteractor;
 import com.uber.rib.data.Task;
-import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
 import com.uber.rib.root.task_act.TaskActInteractor;
 import com.uber.rib.root.task_act.TaskActRouter;
+import com.uber.rib.root.task_add.TaskAddInteractor;
 import com.uber.rib.tutorial1.R;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 
 /** Coordinates Business Logic for {@link RootBuilder.RootScope}. */
 @RibInteractor
@@ -47,8 +39,6 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
   @Inject RootPresenter presenter;
   @Inject RootListener listener;
 
-  @Nullable
-  Menu mMenu;
 
   @Override
   protected void didBecomeActive(@Nullable Bundle savedInstanceState) {
@@ -60,20 +50,12 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
     DrawerLayout drawerLayout = taskActRouter.getView().getDrawerLayout();
 //    presenter.setSupportActionBar(toolbar);
     if (listener != null) {
-      listener.suggestSetupSupportActionBar(toolbar);
+//      listener.suggestSetupSupportActionBar(toolbar);
+      listener.suggestSetupActionBar(R.string.app_name, true);
       listener.suggestSetupNavigationDrawer(drawerLayout);
 
     }
 
-//    presenter.homeMenuClick()
-//            .subscribe(new Consumer<View>() {
-//              @Override
-//              public void accept(View view) throws Exception {
-//                if (listener != null) {
-//                  listener.suggestHomeMenuClick();
-//                }
-//              }
-//            });
     // Add attachment logic here (RxSubscriptions, etc.).
   }
 
@@ -82,8 +64,6 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
     @Override
     public void requestMenuItemListClick(Integer menuItemId) {
-      getRouter().detachShowList();
-//      getRouter().detachTaskAct();
       getRouter().attachTaskAct();
       Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item list", Toast.LENGTH_SHORT).show();
 
@@ -91,9 +71,6 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
     @Override
     public void requestMenuItemStatisticClick(Integer menuItemId) {
-//      getRouter().detachTaskAct();
-//      getRouter().detachShowList();
-//      getRouter().attachShowList();
       Toast.makeText(getRouter().getView().getContext(), "received notify selected menu item statistic", Toast.LENGTH_SHORT).show();
 
     }
@@ -106,7 +83,31 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
     @Override
     public void requestAttachAddTaskView() {
-      getRouter().attachTaskAddEdit();
+      getRouter().attachTaskAdd();
+
+    }
+
+
+  }
+
+  class TaskAddListener implements TaskAddInteractor.Listener {
+
+
+    @Override
+    public void requestSetupActionBar() {
+      if (listener != null) {
+        listener.suggestSetupActionBar(R.string.add_task, false);
+      }
+    }
+
+    @Override
+    public void requestAddTask(Task task) {
+      if (getRouter().taskActRouter != null) {
+        getRouter().taskActRouter.requestAddNewTask(task);
+        getRouter().detachTaskAdd();
+        listener.suggestSetupActionBar(R.string.app_name, true);
+      }
+
     }
 
 
@@ -118,8 +119,9 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
   }
 
   public interface RootListener {
-    void suggestSetupSupportActionBar(Toolbar toolbar);
+//    void suggestSetupSupportActionBar(Toolbar toolbar);
     void suggestSetupNavigationDrawer(DrawerLayout drawerLayout);
     void suggestAddMenuTaskFragment(Integer resourceMenuId);
+    void suggestSetupActionBar(int stringTitleId, boolean isShowMenuOptions);
   }
 }

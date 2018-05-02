@@ -26,7 +26,7 @@ import javax.inject.Inject;
 public class FilterResultInteractor
     extends Interactor<FilterResultInteractor.FilterResultPresenter, FilterResultRouter> {
 
-  @Inject FilterResultPresenter presenter;
+  @Inject public FilterResultPresenter presenter;
   public Integer mCurrentStatusFilterResult = TaskStatus.ALL;
 
 
@@ -35,8 +35,6 @@ public class FilterResultInteractor
     super.didBecomeActive(savedInstanceState);
 
     // TODO: Add attachment logic here (RxSubscriptions, etc.).
-//    presenter.loadData(loadData());
-//    presenter.setFilterResultMatchingWithStatus(mCurrentStatusFilterResult);
 
 
   }
@@ -49,20 +47,7 @@ public class FilterResultInteractor
   }
 
   public void showFilterResult(List<Task> tasks) {
-//    switch (menuItemId) {
-//      case R.id.all: {
-//        mCurrentStatusFilterResult = TaskStatus.ALL;
-//        break;
-//      }
-//      case R.id.active: {
-//        mCurrentStatusFilterResult = TaskStatus.ACTIVE;
-//        break;
-//      }
-//      case R.id.completed: {
-//        mCurrentStatusFilterResult = TaskStatus.COMPLETED;
-//        break;
-//      }
-//    }
+
     presenter.updateFilterResult(tasks);
   }
 
@@ -72,7 +57,8 @@ public class FilterResultInteractor
    */
   interface FilterResultPresenter {
     void updateFilterResult(List<Task> tasks);
-    void loadData(List<Task> listTask);
+    List<Task> addNewTask(Task task);
+    void updateStatusData();
 
   }
 

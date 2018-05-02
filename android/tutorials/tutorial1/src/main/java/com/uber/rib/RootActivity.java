@@ -47,6 +47,8 @@ import com.uber.rib.root.RootRouter;
 import com.uber.rib.root.task_act.TaskActInteractor;
 import com.uber.rib.tutorial1.R;
 
+import java.util.ArrayList;
+
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
@@ -131,19 +133,32 @@ public class RootActivity extends RibActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+      if (mRootRouter != null) {
+          boolean isHomeApp = mRootRouter.requestChildRibListenBackPress();
+          if (isHomeApp) {
+              moveTaskToBack(false);
+          }
+
+      }
+    }
 
 
   class InstanceRootListener implements RootInteractor.RootListener {
 
     @SuppressLint("ResourceAsColor")
-    @Override
-    public void suggestSetupSupportActionBar(Toolbar toolbar) {
-      ActionBar ab = getSupportActionBar();
-      ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setBackgroundDrawable(new ColorDrawable(R.drawable.colorPrimaryDrawable));
-      mToolbar = toolbar;
-    }
+//    @Override
+//    public void suggestSetupSupportActionBar(Toolbar toolbar) {
+//      ActionBar ab = getSupportActionBar();
+////      ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+//      if (mRootRouter != null) {
+//          setupHomeAsUpIndicator(ab, mRootRouter.listRouter);
+//      }
+//      ab.setDisplayHomeAsUpEnabled(true);
+//      ab.setBackgroundDrawable(new ColorDrawable(R.drawable.colorPrimaryDrawable));
+//      mToolbar = toolbar;
+//    }
 
 
 
@@ -162,7 +177,35 @@ public class RootActivity extends RibActivity {
 
     }
 
+      @Override
+      public void suggestSetupActionBar(int stringTitleId, boolean isShowMenuOptions) {
+          if (mMenu != null) {
+              mMenu.findItem(R.id.menu_clear).setVisible(isShowMenuOptions);
+              mMenu.findItem(R.id.menu_filter).setVisible(isShowMenuOptions);
+              mMenu.findItem(R.id.menu_refresh).setVisible(isShowMenuOptions);
+
+          }
+
+          ActionBar ab = getSupportActionBar();
+          ab.setTitle(stringTitleId);
+          ab.setDisplayHomeAsUpEnabled(true);
+          ab.setBackgroundDrawable(new ColorDrawable(R.drawable.colorPrimaryDrawable));
+
+          if (mRootRouter != null) {
+              setupHomeAsUpIndicator(ab, mRootRouter.listRouter);
+          }
+      }
+
+
   }
+
+    private void setupHomeAsUpIndicator(ActionBar ab, ArrayList<ViewRouter> listRouter) {
+        if (listRouter.size() == 1) {
+            ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        } else if (listRouter.size() > 1) {
+            ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        }
+    }
 
 }
 
