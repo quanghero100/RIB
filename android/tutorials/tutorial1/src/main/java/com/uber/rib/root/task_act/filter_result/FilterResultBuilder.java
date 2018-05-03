@@ -58,6 +58,7 @@ public class FilterResultBuilder
 
   public interface ParentComponent {
     // TODO: Define dependencies required from your parent interactor here.
+    FilterResultInteractor.Listener listenerFromFilterResult();
   }
 
   @dagger.Module

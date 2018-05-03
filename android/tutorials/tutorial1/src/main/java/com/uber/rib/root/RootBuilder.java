@@ -27,6 +27,7 @@ import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.root.task_act.TaskActInteractor;
 import com.uber.rib.root.task_add.TaskAddBuilder;
 import com.uber.rib.root.task_add.TaskAddInteractor;
+import com.uber.rib.root.task_detail.TaskDetailBuilder;
 import com.uber.rib.tutorial1.R;
 
 import java.lang.annotation.Retention;
@@ -99,10 +100,9 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
       return new RootRouter(view,
               interactor,
               component,
-//              new ShowListBuilder(component)
               new TaskActBuilder(component, view.getActivity()),
-//              new ShowListBuilder(component),
-              new TaskAddBuilder(component)
+              new TaskAddBuilder(component),
+              new TaskDetailBuilder(component)
       );
 
     }
@@ -130,7 +130,8 @@ public class RootBuilder extends ViewBuilder<RootView, RootRouter, RootBuilder.P
           BuilderComponent,
           TaskActBuilder.ParentComponent,
           ShowListBuilder.ParentComponent,
-          TaskAddBuilder.ParentComponent
+          TaskAddBuilder.ParentComponent,
+          TaskDetailBuilder.ParentComponent
 
   {
 

@@ -1,6 +1,9 @@
 package com.uber.rib.root.task_act.filter_result;
 
 import android.support.annotation.Nullable;
+import android.util.Pair;
+import android.view.View;
+import android.widget.Toast;
 
 import com.uber.rib.core.Bundle;
 import com.uber.rib.core.Interactor;
@@ -17,6 +20,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+
 /**
  * Coordinates Business Logic for {@link FilterResultBuilder.FilterResultScope}.
  *
@@ -27,7 +33,8 @@ public class FilterResultInteractor
     extends Interactor<FilterResultInteractor.FilterResultPresenter, FilterResultRouter> {
 
   @Inject public FilterResultPresenter presenter;
-  public Integer mCurrentStatusFilterResult = TaskStatus.ALL;
+  @Inject Listener listener;
+//  public Integer mCurrentStatusFilterResult = TaskStatus.ALL;
 
 
   @Override
@@ -35,7 +42,13 @@ public class FilterResultInteractor
     super.didBecomeActive(savedInstanceState);
 
     // TODO: Add attachment logic here (RxSubscriptions, etc.).
-
+//    presenter.itemClicks()
+//            .subscribe(new Consumer<Pair<Integer, Task>>() {
+//              @Override
+//              public void accept(Pair<Integer, Task> integerTaskPair) throws Exception {
+//                Toast.makeText(getRouter().getView().getContext(), integerTaskPair.second.getTitle(), Toast.LENGTH_SHORT).show();
+//              }
+//            });
 
   }
 
@@ -49,6 +62,7 @@ public class FilterResultInteractor
   public void showFilterResult(List<Task> tasks) {
 
     presenter.updateFilterResult(tasks);
+
   }
 
 
@@ -58,9 +72,13 @@ public class FilterResultInteractor
   interface FilterResultPresenter {
     void updateFilterResult(List<Task> tasks);
     List<Task> addNewTask(Task task);
-    void updateStatusData();
-
+    void completeTask(Task task);
+    void activeTask(Task task);
   }
 
+
+  public interface Listener {
+    void requestShowTaskDetail(Task task);
+  }
 
 }

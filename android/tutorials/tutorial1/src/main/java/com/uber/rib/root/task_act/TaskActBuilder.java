@@ -10,6 +10,7 @@ import com.uber.rib.root.common.navigation_drawer.NavigationDrawerBuilder;
 import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
 import com.uber.rib.root.task_act.filter_empty.FilterEmptyBuilder;
 import com.uber.rib.root.task_act.filter_result.FilterResultBuilder;
+import com.uber.rib.root.task_act.filter_result.FilterResultInteractor;
 import com.uber.rib.tutorial1.R;
 
 import java.lang.annotation.Retention;
@@ -98,6 +99,12 @@ public class TaskActBuilder
     @Provides
     static NavigationDrawerInteractor.Listener navigationDrawerListener(TaskActInteractor interactor) {
       return interactor. new NavigationDrawerListener();
+    }
+
+    @TaskActScope
+    @Provides
+    static FilterResultInteractor.Listener filterResultListener(TaskActInteractor interactor) {
+      return interactor. new FilterResultListener();
     }
     // TODO: Create provider methods for dependencies created by this Rib. These should be static.
   }

@@ -15,6 +15,7 @@ import com.uber.rib.core.Presenter;
 import com.uber.rib.core.Router;
 import com.uber.rib.data.Task;
 import com.uber.rib.root.common.navigation_drawer.NavigationDrawerInteractor;
+import com.uber.rib.root.task_act.filter_result.FilterResultInteractor;
 import com.uber.rib.tutorial1.R;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class TaskActInteractor
 
     getRouter().attachNavigationDrawer();
     listener.requestAddMenuTaskFragment(R.menu.tasks_fragment_menu);
-    mListTask = loadData();
+//    mListTask = loadData();
     mStatusData = mListTask.size() > 0 ? TaskStatus.HAVE_DATA : TaskStatus.NO_DATA;
 
     if (mStatusData.equals(TaskStatus.NO_DATA)) {
@@ -117,16 +118,7 @@ public class TaskActInteractor
 
   }
 
-  public void updateStatusData(List<Task> listTask) {
-    mStatusData = listTask.size() > 0 ? TaskStatus.HAVE_DATA : TaskStatus.NO_DATA;
-//    if (mStatusData.equals(TaskStatus.NO_DATA)) {
-//      getRouter().detachFilterResult();
-//      getRouter().attachFilterEmpty();
-//    } else if (mStatusData.equals(TaskStatus.HAVE_DATA)) {
-//      getRouter().detachFilterEmpty();
-//      getRouter().attachFilterResult();
-//    }
-  }
+
 
   @Override
   protected void willResignActive() {
@@ -151,20 +143,29 @@ public class TaskActInteractor
     }
   }
 
-  List<Task> loadData() {
+  class FilterResultListener implements FilterResultInteractor.Listener {
 
-    Task[] tasks = {
-            new Task((long) 0, "dfdfdf", "fjsdf", false),
-            new Task((long) 1, "dfdfdf", "fjsdf", true),
-            new Task((long) 2, "dfdfdf", "fjsdf", true),
-            new Task((long) 3, "dfdfdf", "fjsdf", false),
-            new Task((long) 4, "dfdfdf", "fjsdf", true),
-            new Task((long) 5, "dfdfdf", "fjsdf", true),
-            new Task((long) 6, "dfdfdf", "fjsdf", false),
-    };
-
-    return new ArrayList<Task>(Arrays.asList(tasks));
+    @Override
+    public void requestShowTaskDetail(Task task) {
+      listener.requestAttachTaskDetailView(task);
+    }
   }
+
+//
+//  List<Task> loadData() {
+//
+//    Task[] tasks = {
+////            new Task((long) 0, "dfdfdf", "fjsdf", false),
+////            new Task((long) 1, "dfdfdf", "fjsdf", true),
+////            new Task((long) 2, "dfdfdf", "fjsdf", true),
+////            new Task((long) 3, "dfdfdf", "fjsdf", false),
+////            new Task((long) 4, "dfdfdf", "fjsdf", true),
+////            new Task((long) 5, "dfdfdf", "fjsdf", true),
+////            new Task((long) 6, "dfdfdf", "fjsdf", false),
+//    };
+//
+//    return new ArrayList<Task>(Arrays.asList(tasks));
+//  }
 
 
   /**
@@ -174,6 +175,8 @@ public class TaskActInteractor
     void toggleOpenCloseDrawer();
     void closeDrawer();
     Observable<Boolean> addTaskButtonClick();
+    void  showAddTaskSuccess();
+
 //    void updateStatusData();
   }
 
@@ -182,5 +185,6 @@ public class TaskActInteractor
     void requestMenuItemStatisticClick(Integer menuItemId);
     void requestAddMenuTaskFragment(Integer resourceMenuId);
     void requestAttachAddTaskView();
+    void requestAttachTaskDetailView(Task task);
   }
 }

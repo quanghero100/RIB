@@ -22,6 +22,8 @@ import com.uber.rib.root.task_act.TaskActBuilder;
 import com.uber.rib.root.task_act.TaskActRouter;
 import com.uber.rib.root.task_add.TaskAddBuilder;
 import com.uber.rib.root.task_add.TaskAddRouter;
+import com.uber.rib.root.task_detail.TaskDetailBuilder;
+import com.uber.rib.root.task_detail.TaskDetailRouter;
 import com.uber.rib.tutorial1.R;
 
 //import javax.annotation.Nullable;
@@ -39,6 +41,8 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
   @Nullable public TaskActRouter taskActRouter;
   private TaskAddBuilder taskAddBuilder;
   @Nullable private TaskAddRouter taskAddRouter;
+  private TaskDetailBuilder taskDetailBuilder;
+  @Nullable public TaskDetailRouter taskDetailRouter;
 
   public ArrayList<ViewRouter> listRouter = new ArrayList<>();
 
@@ -46,13 +50,14 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
              RootInteractor interactor,
              RootBuilder.Component component,
              TaskActBuilder taskActBuilder,
-//             ShowListBuilder showListBuilder,
-             TaskAddBuilder taskAddBuilder
+             TaskAddBuilder taskAddBuilder,
+             TaskDetailBuilder taskDetailBuilder
              ) {
     super(view, interactor, component);
 //    this.showListBuilder = showListBuilder;
     this.taskActBuilder = taskActBuilder;
     this.taskAddBuilder = taskAddBuilder;
+    this.taskDetailBuilder = taskDetailBuilder;
 
   }
 
@@ -101,8 +106,6 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
       getView().addView(this.taskAddRouter.getView());
 
     }
-//    return taskAddRouter;
-
   }
 
   public void detachTaskAdd() {
@@ -110,6 +113,26 @@ public class RootRouter extends ViewRouter<RootView, RootInteractor, RootBuilder
       detachChild(this.taskAddRouter);
       getView().removeView(this.taskAddRouter.getView());
       this.taskAddRouter = null;
+      listRouter.remove(listRouter.size() - 1);
+
+    }
+  }
+
+  public void attachTaskDetail() {
+    if (this.taskDetailRouter == null) {
+      this.taskDetailRouter = this.taskDetailBuilder.build(getView());
+      listRouter.add(taskDetailRouter);
+      attachChild(this.taskDetailRouter);
+      getView().addView(this.taskDetailRouter.getView());
+
+    }
+  }
+
+  public void detachTaskDetail() {
+    if (this.taskDetailRouter != null) {
+      detachChild(this.taskDetailRouter);
+      getView().removeView(this.taskDetailRouter.getView());
+      this.taskDetailRouter = null;
       listRouter.remove(listRouter.size() - 1);
 
     }

@@ -87,6 +87,14 @@ public class RootInteractor extends Interactor<RootInteractor.RootPresenter, Roo
 
     }
 
+    @Override
+    public void requestAttachTaskDetailView(Task task) {
+      getRouter().attachTaskDetail();
+      if (getRouter().taskDetailRouter != null) {
+        getRouter().taskDetailRouter.requestBindDataToTaskDetail(task);
+      }
+    }
+
 
   }
 

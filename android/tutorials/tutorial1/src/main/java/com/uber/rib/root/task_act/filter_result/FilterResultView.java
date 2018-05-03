@@ -3,7 +3,9 @@ package com.uber.rib.root.task_act.filter_result;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.AdapterViewItemClickEvent;
+import com.jakewharton.rxbinding2.widget.RxAdapterView;
 import com.uber.rib.core.Initializer;
 import com.uber.rib.data.Task;
 import com.uber.rib.root.task_act.TaskStatus;
@@ -20,6 +25,10 @@ import com.uber.rib.tutorial1.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Top level view for {@link FilterResultBuilder.FilterResultScope}.
@@ -39,23 +48,29 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
   }
 
   ListView mListView;
-  TaskAdapter mTaskAdapter;
+  public TaskAdapter mTaskAdapter;
   List<Task> mListTask;
+
+
 
   TaskItemListener mTaskItemListener  = new TaskItemListener() {
     @Override
-    public void onTaskClick(Task clickedTask) {
-//      mPresenter.openTaskDetails(clickedTask);
+    public void onTaskClick(View view, Task clickedTask) {
+
     }
 
     @Override
     public void onCompleteTaskClick(Task completedTask) {
-//      mPresenter.completeTask(completedTask);
+      completeTask(completedTask);
+      Snackbar.make(mListView, R.string.task_marked_complete, Snackbar.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onActivateTaskClick(Task activatedTask) {
-//      mPresenter.activateTask(activatedTask);
+      activeTask(activatedTask);
+      Snackbar.make(mListView, R.string.task_marked_active, Snackbar.LENGTH_SHORT).show();
+
     }
   };
 
@@ -69,6 +84,7 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
     mTaskAdapter = new TaskAdapter(mListTask, mTaskItemListener);
     mListView.setAdapter(mTaskAdapter);
 
+
   }
 
   @Override
@@ -80,16 +96,39 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
 
   @Override
   public List<Task> addNewTask(Task task) {
+    task.setId(mTaskAdapter.getCount());
     mTaskAdapter.addNewTask(task);
     return mTaskAdapter.getListTask();
-//    mListTask.add(task);
-//    mTaskAdapter.updateData(mListTask);
   }
 
   @Override
-  public void updateStatusData() {
+  public void completeTask(Task task) {
 
+    int length = mTaskAdapter.getCount();
+    ArrayList<Task> listTask = (ArrayList<Task>) mTaskAdapter.getListTask();
+    for (int i = 0; i < length; i++) {
+      if (listTask.get(i).getId() == task.getId() && !listTask.get(i).isCompleted()) {
+        listTask.get(i).setCompleted(true);
+        break;
+      }
+    }
+    mTaskAdapter.updateData(listTask);
   }
+
+  @Override
+  public void activeTask(Task task) {
+    int length = mTaskAdapter.getCount();
+    ArrayList<Task> listTask = (ArrayList<Task>) mTaskAdapter.getListTask();
+    for (int i = 0; i < length; i++) {
+      if (listTask.get(i).getId() == task.getId() && listTask.get(i).isCompleted()) {
+        listTask.get(i).setCompleted(false);
+        break;
+      }
+    }
+    mTaskAdapter.updateData(listTask);
+  }
+
+
 
 
   //====================================================================================
@@ -98,6 +137,7 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
   private static class TaskAdapter extends BaseAdapter {
     private List<Task> mTasks = new ArrayList<Task>();
     private TaskItemListener mItemListener;
+
 
     public TaskAdapter(List<Task> tasks, TaskItemListener itemListener) {
       mTasks = tasks;
@@ -124,12 +164,13 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
       View rowView = view;
       if (rowView == null) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         rowView = inflater.inflate(R.layout.task_item, viewGroup, false);
       }
+
 
       final Task task = (Task) getItem(i);
 
@@ -162,7 +203,7 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
       rowView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          mItemListener.onTaskClick(task);
+            mItemListener.onTaskClick(view, task);
         }
       });
 
@@ -177,13 +218,15 @@ class FilterResultView extends LinearLayout implements FilterResultInteractor.Fi
     public List<Task> getListTask() {
       return mTasks;
     }
+
+
   }
 
   //Interface task item listener
 
   public interface TaskItemListener {
 
-    void onTaskClick(Task clickedTask);
+    void onTaskClick(View view, Task clickedTask);
 
     void onCompleteTaskClick(Task completedTask);
 

@@ -1,6 +1,7 @@
 package com.uber.rib.root.task_act;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -41,7 +42,9 @@ public class TaskActRouter extends
   @Nullable
   private FilterResultRouter filterResultRouter;
 
-//  private Integer statusFilter = TaskStatus.ALL;
+  private Integer mCurrentMenuItemId = R.id.all;
+
+  List<Task> mListTask = new ArrayList<>();
 
   public TaskActRouter(
       TaskActView view,
@@ -61,30 +64,38 @@ public class TaskActRouter extends
 
   public void requestAddNewTask(Task task) {
     if (filterResultRouter != null) {
-      List<Task> listTask = filterResultRouter.requestAddNewTask(task);
-      getInteractor().updateStatusData(listTask);
-//      getInteractor().presenter.updateStatusData();
-//      listenerMenuItemPopupClick(getInteractor().getStatusFiler());
+      mListTask = filterResultRouter.requestAddNewTask(task);
+
+    } else if (filterResultRouter == null) {
+      detachFilterEmpty();
+      attachFilterResult();
+      if (filterResultRouter != null) {
+        filterResultRouter.requestUpdateData(mListTask);
+        mListTask = filterResultRouter.requestAddNewTask(task);
+        getInteractor().setListTask(mListTask);
+        listenerMenuItemPopupClick(mCurrentMenuItemId);
+      }
 
     }
+    getInteractor().presenter.showAddTaskSuccess();
   }
 
   public void listenerMenuItemPopupClick(Integer menuItemId) {
-    List<Task> listTask = getInteractor().getListTask();
-
+    mListTask = getInteractor().getListTask();
+    mCurrentMenuItemId = menuItemId;
     List<Task> tasks = new ArrayList<>();
     Integer statusFilter = getInteractor().getStatusFiler();
     switch (menuItemId) {
       case R.id.all: {
         statusFilter = TaskStatus.ALL;
-        tasks = listTask;
+        tasks = mListTask;
         break;
       }
       case R.id.active: {
         statusFilter = TaskStatus.ACTIVE;
-        for (int i = 0; i < listTask.size(); i++) {
-          if (listTask.get(i).isActive()) {
-            tasks.add(listTask.get(i));
+        for (int i = 0; i < mListTask.size(); i++) {
+          if (mListTask.get(i).isActive()) {
+            tasks.add(mListTask.get(i));
           }
         }
 
@@ -92,9 +103,9 @@ public class TaskActRouter extends
       }
       case R.id.completed: {
         statusFilter = TaskStatus.COMPLETED;
-        for (int i = 0; i < listTask.size(); i++) {
-          if (listTask.get(i).isCompleted()) {
-            tasks.add(listTask.get(i));
+        for (int i = 0; i < mListTask.size(); i++) {
+          if (mListTask.get(i).isCompleted()) {
+            tasks.add(mListTask.get(i));
           }
         }
 
@@ -122,16 +133,6 @@ public class TaskActRouter extends
       }
     }
 
-//
-//    if (getInteractor().mCurrentStatus.equals(TaskStatus.NO_DATA)) {
-//      if (filterEmptyRouter != null) {
-//        filterEmptyRouter.getInteractor().setCurrentStatusFilterEmpty(menuItemId);
-//      }
-//    } else if (getInteractor().mCurrentStatus.equals(TaskStatus.HAVE_DATA)) {
-//      if (filterResultRouter != null) {
-//        filterResultRouter.getInteractor().setCurrentStatusFilterResult(menuItemId);
-//      }
-//    }
   }
 
 

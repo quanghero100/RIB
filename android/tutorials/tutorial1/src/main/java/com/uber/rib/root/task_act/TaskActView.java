@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -98,6 +99,7 @@ public class TaskActView extends DrawerLayout implements TaskActInteractor.TaskA
 
   @Override
   public Observable<Boolean> addTaskButtonClick() {
+
     return RxView.clicks(fabAddTask)
             .map(new Function<Object, Boolean>() {
               @Override
@@ -107,7 +109,11 @@ public class TaskActView extends DrawerLayout implements TaskActInteractor.TaskA
             });
   }
 
+  @Override
+  public void showAddTaskSuccess() {
+    Snackbar.make(fabAddTask, R.string.successfully_saved_task_message, Snackbar.LENGTH_SHORT).show();
 
+  }
 
 
 }

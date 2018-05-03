@@ -26,4 +26,8 @@ public class FilterResultRouter extends
   public List<Task> requestAddNewTask(Task task) {
     return getInteractor().presenter.addNewTask(task);
   }
+
+  public void requestUpdateData(List<Task> listTask) {
+    getInteractor().presenter.updateFilterResult(listTask);
+  }
 }
